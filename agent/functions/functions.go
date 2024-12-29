@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"slices"
 	"strings"
 
 	"github.com/openai/openai-go"
@@ -14,17 +15,37 @@ import (
 func InitializeFunctions(
 	noSubmit bool,
 	repoService RepositoryService,
+	allowFunctions []string,
 ) {
-	InitOpenFileFunction()
-	InitListFilesFunction()
-	InitPutFileFunction()
-	InitModifyFileFunction()
-	if !noSubmit {
+	if allowFunction(allowFunctions, FuncOpenFile) {
+		InitOpenFileFunction()
+	}
+	if allowFunction(allowFunctions, FuncListFiles) {
+		InitListFilesFunction()
+	}
+	if allowFunction(allowFunctions, FuncPutFile) {
+		InitPutFileFunction()
+	}
+	if allowFunction(allowFunctions, FuncModifyFile) {
+		InitModifyFileFunction()
+	}
+	// TODO:
+	if !noSubmit && allowFunction(allowFunctions, FuncModifyFile) {
 		InitSubmitFilesGitHubFunction()
 	}
-	InitGetWebSearchResult()
-	InitFuncGetWebPageFromURLFunction()
-	InitGetPullRequestFunction(repoService)
+	if allowFunction(allowFunctions, FuncGetWebSearchResult) {
+		InitGetWebSearchResult()
+	}
+	if allowFunction(allowFunctions, FuncGetWebPageFromURL) {
+		InitFuncGetWebPageFromURLFunction()
+	}
+	if allowFunction(allowFunctions, FuncGetPullRequestDiff) {
+		InitGetPullRequestFunction(repoService)
+	}
+}
+
+func allowFunction(allowFunctions []string, name string) bool {
+	return slices.Contains(allowFunctions, name)
 }
 
 type FuncName string

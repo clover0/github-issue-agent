@@ -104,7 +104,7 @@ func (s SubmitFileGitHubService) Caller(
 		if err != nil {
 			return submitFileOut, fmt.Errorf("submit file service: create PR: %w", err)
 		}
-		s.logger.Debug(fmt.Sprintf("created PR: %s\n", pr.URL))
+		s.logger.Debug(fmt.Sprintf("created PR: %v\n", pr.URL))
 
 		return functions.SubmitFilesOutput{
 			Branch:            newBranch,

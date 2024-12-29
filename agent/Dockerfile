@@ -1,5 +1,3 @@
-FROM golang:1.23.3-bookworm
+FROM golang:1.23.3-bookworm AS devlopment
 
 WORKDIR /usr/local/agent
-
-RUN go install github.com/go-delve/delve/cmd/dlv@latest

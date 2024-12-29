@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
     volumes:
       - ./:/usr/local/agent
       - agent-go-mod:/go/pkg/mod

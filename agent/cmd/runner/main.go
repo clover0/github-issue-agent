@@ -11,6 +11,7 @@ import (
 	"github.com/google/go-github/v66/github"
 
 	"github/clover0/github-issue-agent/agent"
+	"github/clover0/github-issue-agent/config"
 	"github/clover0/github-issue-agent/config/cli"
 	"github/clover0/github-issue-agent/functions"
 	"github/clover0/github-issue-agent/functions/agithub"
@@ -31,6 +32,7 @@ func newGitHub() *github.Client {
 }
 
 func main() {
+	// TODO:
 	//lo := logger.NewDefaultLogger()
 	lo := logger.NewPrinter()
 
@@ -40,20 +42,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := agithub.CloneRepository(lo, cliIn); err != nil {
-		lo.Error("failed to clone repository")
+	conf, err := config.Load(cliIn.Common.Config)
+	if err != nil {
+		lo.Error("failed to load config: %s", err)
 		os.Exit(1)
 	}
 
+	if conf.Agent.GitHub.CloneRepository {
+		if err := agithub.CloneRepository(lo, conf); err != nil {
+			lo.Error("failed to clone repository")
+			os.Exit(1)
+		}
+	}
+
 	// TODO: no dependency with changing directory
-	if err := os.Chdir(cliIn.AgentWorkDir); err != nil {
+	if err := os.Chdir(conf.WorkDir); err != nil {
 		lo.Error("failed to change directory: %s", err)
 		os.Exit(1)
 	}
 
-	llmForwarder := models.SelectForwarder(lo, cliIn.Model)
+	llmForwarder := models.SelectForwarder(lo, conf.Agent.Model)
 
-	promptTemplate, err := libprompt.LoadPromptTemplateFromYAML(cliIn.Template)
+	promptTemplate, err := libprompt.LoadPromptTemplateFromYAML(conf.Agent.PromptTemplate)
 	if err != nil {
 		lo.Error("failed to load prompt template: %s", err)
 		os.Exit(1)
@@ -64,9 +74,11 @@ func main() {
 	gh := newGitHub()
 
 	functions.InitializeFunctions(
-		cliIn.NoSubmit,
-		agithub.NewGitHubService(cliIn.RepositoryOwner, cliIn.Repository, gh, lo),
+		conf.Agent.GitHub.NoSubmit,
+		agithub.NewGitHubService(conf.Agent.GitHub.Owner, conf.Agent.GitHub.Repository, gh, lo),
+		conf.AllowFunctions,
 	)
+	lo.Info("allowed functions: %s", conf.AllowFunctions)
 
 	var issLoader loader.Loader
 	var issue loader.Issue
@@ -79,25 +91,25 @@ func main() {
 		}
 	} else {
 		lo.Info("load issue from GitHub")
-		issLoader = loader.NewGitHubLoader(gh, cliIn.RepositoryOwner, cliIn.Repository)
+		issLoader = loader.NewGitHubLoader(gh, conf.Agent.GitHub.Owner, conf.Agent.GitHub.Repository)
 		if issue, err = issLoader.LoadIssue(ctx, cliIn.GithubIssueNumber); err != nil {
 			lo.Error("failed to load issue from GitHub: %s", err)
 			os.Exit(1)
 		}
 	}
 
-	submitServiceCaller := agithub.NewSubmitFileGitHubService(cliIn.RepositoryOwner, cliIn.Repository, gh, lo).
+	submitServiceCaller := agithub.NewSubmitFileGitHubService(conf.Agent.GitHub.Owner, conf.Agent.GitHub.Repository, gh, lo).
 		Caller(ctx, functions.SubmitFilesServiceInput{
 			BaseBranch: cliIn.BaseBranch,
-			GitEmail:   cliIn.GitEmail,
-			GitName:    cliIn.GitName,
+			GitEmail:   conf.Agent.Git.UserEmail,
+			GitName:    conf.Agent.Git.UserName,
 		})
 
 	dataStore := store.NewStore()
 
 	parameter := agent.Parameter{
-		MaxSteps: cliIn.MaxSteps,
-		Model:    cliIn.Model,
+		MaxSteps: conf.Agent.MaxSteps,
+		Model:    conf.Agent.Model,
 	}
 
 	prompt, err := libprompt.BuildRequirementPrompt(promptTemplate, issue)
@@ -210,8 +222,8 @@ func main() {
 		}
 
 		if _, _, err := gh.PullRequests.CreateReview(context.Background(),
-			cliIn.RepositoryOwner,
-			cliIn.Repository,
+			conf.Agent.GitHub.Owner,
+			conf.Agent.GitHub.Repository,
 			submittedPRNumber,
 			&github.PullRequestReviewRequest{
 				Event:    github.String("COMMENT"),

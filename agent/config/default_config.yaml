@@ -1,0 +1,65 @@
+
+# Required
+workdir: "/tmp/repositories"
+
+agent:
+
+  # Default prompt template is embed config.
+  prompt_template: ""
+
+  # LLM model name
+  model: "gpt-4o"
+
+  # Maximum steps to run agent
+  # 1 spte as LLM to user
+  # 1 step as user execution function
+  max_steps: 100
+
+  git:
+    # Required
+    user_name: ""
+
+    # Required
+    user_email: ""
+
+  # GitHub environment for agent
+  github:
+    # Don't submit files to GitHub by Pull Request.
+    no_submit: false
+
+    # Whether to clone repository to the workdir
+    clone_repository: true
+
+    # Required
+    # Repositories owner to operate
+    owner: ""
+
+    # Required
+    # Repository name to operate
+    repository: ""
+
+    # Required
+    # Base branch to operate. Pull Request will be created to this branch.
+    base_branch: "main"
+
+    # Issue number
+    # e.g) 873
+    # you need to use this option or issue_from_file
+    # issue_number: ""
+
+    # Issue file path (path/to/file)
+    # issue_from_file: ""
+
+
+  # Allow agent to use function.
+  # Belows are the default functions.
+  allow_functions:
+    - get_pull_request_diff
+    - get_web_page_from_url
+    - get_web_search_result
+    - list_files
+    - modify_file
+    - open_file
+    - put_file
+    - submit_file_service
+    - submit_files
