@@ -5,6 +5,7 @@ go 1.23.3
 require (
 	github.com/go-playground/validator/v10 v10.23.0
 	github.com/google/go-github/v66 v66.0.0
+	github.com/google/go-github/v68 v68.0.0
 	github.com/openai/openai-go v0.1.0-alpha.38
 	golang.org/x/net v0.33.0
 	gopkg.in/yaml.v3 v3.0.1
