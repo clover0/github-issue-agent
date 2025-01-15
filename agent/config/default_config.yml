@@ -18,7 +18,8 @@ agent:
 
   # Required
   # LLM model name
-  model: "gpt-4o"
+  # The recommend model is Claude 3.5 Sonnet
+  model: "claude-3-5-sonnet-20241022"
 
   # Maximum steps to run agent
   # The following are defined as 1 step

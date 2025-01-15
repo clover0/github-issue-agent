@@ -3,8 +3,8 @@ package functions_test
 import (
 	"testing"
 
-	"github/clover0/github-issue-agent/functions"
-	"github/clover0/github-issue-agent/test/assert"
+	"github.com/clover0/issue-agent/functions"
+	"github.com/clover0/issue-agent/test/assert"
 )
 
 func TestGuardPath(t *testing.T) {

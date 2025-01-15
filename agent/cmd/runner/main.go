@@ -11,12 +11,15 @@ import (
 	"strings"
 	"syscall"
 
-	"github/clover0/github-issue-agent/cli"
-	"github/clover0/github-issue-agent/config"
+	"github.com/clover0/issue-agent/cli"
+	"github.com/clover0/issue-agent/config"
 )
 
 const defaultConfigPath = "./issue_agent.yml"
-const containerImageTag = "dev"
+
+// This value is set at release build time
+// ldflags "-X github.com/clover0/issue-agent/main.containerImageTag=v0.0.1"
+var containerImageTag = "dev"
 
 // Use the docker command to start a container and execute the agent binary
 func main() {
@@ -38,7 +41,7 @@ func main() {
 		panic(err)
 	}
 
-	imageName := "issue-agent"
+	imageName := "ghcr.io/clover0/issue-agent"
 	imageTag := containerImageTag
 	dockerEnvs := passEnvs()
 	containerName := "issue-agent"
@@ -60,7 +63,6 @@ func main() {
 	}
 	args = append(args, dockerEnvs...)
 	args = append(args, imageName+":"+imageTag)
-	args = append(args, "agent") // agent binary is built by agent/main.go
 	args = append(args, os.Args[1:]...)
 	for _, a := range os.Args[1:] {
 		if strings.HasSuffix(a, "-config") {

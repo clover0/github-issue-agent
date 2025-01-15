@@ -1,17 +1,17 @@
 version: 2
 project_name: issue-agent
 
-before:
-  hooks:
-    - go mod tidy
+git:
+  tag_sort: -version:creatordate
 
 builds:
   - id: runner
     dir: agent
     env:
       - CGO_ENABLED=0
+      - GO111MODULE=on
     main: ./cmd/runner/main.go
-    binary: runner
+    binary: issue-agent
     goos:
       - linux
       - darwin
@@ -19,10 +19,12 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -X main.containerImageTag={{.Tag}}
+      - "-X main.containerImageTag={{.Tag}}"
   - id: agent
+    dir: agent
     env:
       - CGO_ENABLED=0
+      - GO111MODULE=on
     main: ./cmd/agent/main.go
     binary: agent
     goos:
@@ -30,6 +32,8 @@ builds:
     goarch:
       - amd64
       - arm64
+    ldflags:
+      - "-X github.com/clover0/issue-agent/cli.version={{ .Tag }}"
 
 dockers:
   - id: issue-agent-amd64
@@ -98,9 +102,23 @@ docker_signs:
 
 archives:
   - format: tar.gz
+    builds:
+      - runner
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}
+      {{ .Binary }}_{{ .Os }}_{{ .Arch }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
 
 release:
   prerelease: true
+  replace_existing_artifacts: true
+
+brews:
+  - name: "{{ .ProjectName }}"
+    skip_upload: auto
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    repository:
+      owner: clover0
+      name: homebrew-issue-agent
+      token: "{{ .Env.HOMEBREW_GITHUB_TOKEN }}"
+    test: |
+      system "#{bin}/issue-agent version"

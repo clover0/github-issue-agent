@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github/clover0/github-issue-agent/logger"
+	"github.com/clover0/issue-agent/logger"
 )
 
 func SelectForwarder(lo logger.Logger, model string) LLMForwarder {

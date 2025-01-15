@@ -1,4 +1,4 @@
-module github/clover0/github-issue-agent
+module github.com/clover0/issue-agent
 
 go 1.23.3
 

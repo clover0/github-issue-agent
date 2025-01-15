@@ -13,6 +13,11 @@ RUN go mod download
 COPY . .
 
 # TODO: SLSA
-RUN cd /agent/src/cmd/agent && go build -o /agent/bin/agent
+RUN cd /agent/src/cmd/agent && \
+    go build \
+      -ldflags "-X github.com/clover0/issue-agent/cli.version=dev-$(date -u +'%Y-%m-%dT%H%M%SZ')" \
+      -o /agent/bin/agent
 
 ENV PATH="/agent/bin:$PATH"
+
+ENTRYPOINT ["/agent/bin/agent"]

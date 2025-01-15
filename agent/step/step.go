@@ -2,7 +2,8 @@ package step
 
 import (
 	"fmt"
-	"github/clover0/github-issue-agent/functions"
+
+	"github.com/clover0/issue-agent/functions"
 )
 
 // TODO: Step owned Agent

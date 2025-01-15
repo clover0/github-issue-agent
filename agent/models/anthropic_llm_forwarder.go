@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github/clover0/github-issue-agent/logger"
-	"github/clover0/github-issue-agent/step"
+	"github.com/clover0/issue-agent/logger"
+	"github.com/clover0/issue-agent/step"
 )
 
 type AnthropicLLMForwarder struct {

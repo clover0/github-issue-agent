@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github/clover0/github-issue-agent/logger"
-	"github/clover0/github-issue-agent/util"
+	"github.com/clover0/issue-agent/logger"
+	"github.com/clover0/issue-agent/util"
 )
 
 type AnthropicClient struct {

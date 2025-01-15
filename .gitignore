@@ -5,3 +5,6 @@
 # Project
 .tmp
 issue_agent.yml
+
+# website
+website/site

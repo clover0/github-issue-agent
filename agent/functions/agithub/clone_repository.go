@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github/clover0/github-issue-agent/config"
-	"github/clover0/github-issue-agent/logger"
+	"github.com/clover0/issue-agent/config"
+	"github.com/clover0/issue-agent/logger"
 )
 
 func CloneRepository(lo logger.Logger, conf config.Config) error {

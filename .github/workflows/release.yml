@@ -5,10 +5,10 @@ on:
     tags:
       - "v*"
 
-permissions: { }
+permissions: {}
 
 jobs:
-  build-image:
+  build:
     permissions:
       contents: write
       id-token: write
@@ -43,6 +43,7 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
 
       - name: Output AMD64 digest
         id: digest-amd64
@@ -65,7 +66,7 @@ jobs:
           image_and_tag=$(echo "$ARTIFACTS" | jq -er 'first(.[] | select (.goarch=="arm64" and .type=="Published Docker Image")) | .path')
           image=$(echo "${image_and_tag}" | cut -d':' -f1)
           sha_digest=$(echo "$ARTIFACTS" |  jq -er 'first(.[] | select (.goarch=="arm64" and .type=="Published Docker Image")) | .extra.Digest')
-          
+
           echo "name=$image" >> "$GITHUB_OUTPUT"
           echo "digest=$sha_digest" >> "$GITHUB_OUTPUT"
 
@@ -82,7 +83,7 @@ jobs:
           push-to-registry: true
 
   provenance-amd64:
-    needs: [ build-image ]
+    needs: [build]
     permissions:
       actions: read
       id-token: write
@@ -90,13 +91,13 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
       image: ghcr.io/clover0/issue-agent
-      digest: ${{ needs.build-image.outputs.digest-amd64 }}
+      digest: ${{ needs.build.outputs.digest-amd64 }}
       registry-username: clover0
     secrets:
       registry-password: ${{ secrets.GITHUB_TOKEN }}
 
   provenance-arm64:
-    needs: [ build-image ]
+    needs: [build]
     permissions:
       actions: read
       id-token: write
@@ -104,7 +105,7 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
       image: ghcr.io/clover0/issue-agent
-      digest: ${{ needs.build-image.outputs.digest-arm64 }}
+      digest: ${{ needs.build.outputs.digest-arm64 }}
       registry-username: clover0
     secrets:
       registry-password: ${{ secrets.GITHUB_TOKEN }}

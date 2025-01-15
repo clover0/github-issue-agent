@@ -8,8 +8,8 @@ import (
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
 
-	"github/clover0/github-issue-agent/logger"
-	"github/clover0/github-issue-agent/step"
+	"github.com/clover0/issue-agent/logger"
+	"github.com/clover0/issue-agent/step"
 )
 
 type OpenAI struct {

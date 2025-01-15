@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/go-github/v66/github"
 
-	"github/clover0/github-issue-agent/logger"
+	"github.com/clover0/issue-agent/logger"
 )
 
 type GitHubService struct {

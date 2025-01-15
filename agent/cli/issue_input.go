@@ -3,6 +3,7 @@ package cli
 import (
 	"flag"
 	"fmt"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -13,19 +14,24 @@ type IssueInputs struct {
 	FromFile          string
 }
 
-func ParseIssueInput(flags []string) (IssueInputs, error) {
-	cliIn := IssueInputs{
+func IssueFlags() (*flag.FlagSet, IssueInputs) {
+	flagMapper := IssueInputs{
 		Common: &CommonInput{},
 	}
 
 	cmd := flag.NewFlagSet("issue", flag.ExitOnError)
 
-	addCommonFlags(cmd, cliIn.Common)
+	addCommonFlags(cmd, flagMapper.Common)
 
-	cmd.StringVar(&cliIn.GithubIssueNumber, "github_issue_number", "", "GitHubLoader issue number")
-	cmd.StringVar(&cliIn.BaseBranch, "base_branch", "", "Base Branch for pull request")
-	cmd.StringVar(&cliIn.FromFile, "from_file", "", "Issue content from file path")
+	cmd.StringVar(&flagMapper.GithubIssueNumber, "github_issue_number", "", "GitHubLoader issue number")
+	cmd.StringVar(&flagMapper.BaseBranch, "base_branch", "", "Base Branch for pull request")
+	cmd.StringVar(&flagMapper.FromFile, "from_file", "", "Issue content from file path")
 
+	return cmd, flagMapper
+}
+
+func ParseIssueInput(flags []string) (IssueInputs, error) {
+	cmd, cliIn := IssueFlags()
 	if err := cmd.Parse(flags); err != nil {
 		return IssueInputs{}, fmt.Errorf("failed to parse input: %w", err)
 	}

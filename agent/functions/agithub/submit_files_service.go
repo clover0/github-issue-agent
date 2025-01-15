@@ -6,9 +6,9 @@ import (
 
 	"github.com/google/go-github/v66/github"
 
-	"github/clover0/github-issue-agent/functions"
-	"github/clover0/github-issue-agent/functions/agit"
-	"github/clover0/github-issue-agent/logger"
+	"github.com/clover0/issue-agent/functions"
+	"github.com/clover0/issue-agent/functions/agit"
+	"github.com/clover0/issue-agent/logger"
 )
 
 // TODO: move to GitHub service

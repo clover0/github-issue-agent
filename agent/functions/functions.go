@@ -9,8 +9,8 @@ import (
 
 	"github.com/openai/openai-go"
 
-	"github/clover0/github-issue-agent/logger"
-	libstore "github/clover0/github-issue-agent/store"
+	"github.com/clover0/issue-agent/logger"
+	libstore "github.com/clover0/issue-agent/store"
 )
 
 func InitializeFunctions(

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github/clover0/github-issue-agent/store"
+	"github.com/clover0/issue-agent/store"
 )
 
 const FuncModifyFile = "modify_file"

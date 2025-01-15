@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github/clover0/github-issue-agent/store"
+	"github.com/clover0/issue-agent/store"
 )
 
 const FuncPutFile = "put_file"

@@ -3,8 +3,8 @@ package models
 import (
 	"context"
 
-	"github/clover0/github-issue-agent/functions"
-	"github/clover0/github-issue-agent/step"
+	"github.com/clover0/issue-agent/functions"
+	"github.com/clover0/issue-agent/step"
 )
 
 // TODO: make no OpenAI dependency

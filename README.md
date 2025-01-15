@@ -1,6 +1,7 @@
 # GitHub Issue Agent
 Agent that, given an assignment, produces work products in the git repository.
 
+[Documentation](https://clover0.github.io/issue-agent/)
 
 ## Models
 The following models are supported.
@@ -16,14 +17,23 @@ The following models are supported.
 Only GitHub pull requests are supported.
 
 
-## Usage
-### Startup Example
-- Set up the config file
+## Installation
+### Homebrew
+```shell
+brew install clover0/issue-agent/issue-agent
+```
+
+### GitHub Releases
+Download the binary from [GitHub Releases](https://github.com/clover0/issue-agent/releases)
+
+## Getting Started
+### Setup
 
 Copy [default_config.yml](agent/config/default_config.yml) to your repository root as `issue_agent.yml`.
 
-```shell
+Next, edit the config file as needed.
 
+Configuration parameter example as follows. See [default_config.yml](agent/config/default_config.yml) for more details.
 
 ```yaml
 # Example
@@ -41,26 +51,39 @@ agent:
     repository: "github-issue-agent"
 ```
 
-- Human decides what issue they want to resolve
-  - e.g)
-  - GitHub Repository `clover0/example-repository`
-  - GitHub Issue Number 123
+Set up the environment variables.
 
-- Run Agent with parameters below run example
 ```shell
-cd agent
+GITHUB_TOKEN=your github token
 
-docker compose run --rm \
-  -e GITHUB_TOKEN=$(gh auth token) \
-  -e OPENAI_API_KEY=${OPENAI_API_KEY} \
-  -e ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY} \
-  agent \
-  go run cmd/runner/main.go issue \
-    -config issue_agent.yml \
-    -github_issue_number 123 \
-    -base_branch master
+# If you use OpenAI models
+OPENAI_API_KEY=your OpenAI API Key
+
+# If you use Anthropic models
+ANTHROPIC_API_KEY=your Anthropic API Key
+````
+
+
+### Run
+Human decides what GitHub issue they want to resolve
+
+e.g)
+- GitHub Working Repository `clover0/example-repository`
+- GitHub Issue Number 123 to solve
+- Base Branch `main` to create a pull request
+
+```shell
+$ issue-agent issue --github_issue_number 123 \
+                    --base_branch main 
+````
+
+With environment variables in one line. [`gh` CLI is useful](https://github.com/cli/cli#installation).
+```shell
+$ GITHUB_TOKEN=$(gh auth token) \
+  ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY} \
+  issue-agent issue --github_issue_number 123 \
+                    --base_branch main
 ```
-  - Working branch is created automatically. (`agent-` prefix)
-  - OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable is required
 
-- Human reviews of work product by agent
+- Working branch is created automatically. (`agent-` prefix)
+- OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable is required

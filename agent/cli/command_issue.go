@@ -7,11 +7,11 @@ import (
 
 	"github.com/google/go-github/v66/github"
 
-	"github/clover0/github-issue-agent/agent"
-	"github/clover0/github-issue-agent/config"
-	"github/clover0/github-issue-agent/functions/agithub"
-	"github/clover0/github-issue-agent/loader"
-	"github/clover0/github-issue-agent/logger"
+	"github.com/clover0/issue-agent/agent"
+	"github.com/clover0/issue-agent/config"
+	"github.com/clover0/issue-agent/functions/agithub"
+	"github.com/clover0/issue-agent/loader"
+	"github.com/clover0/issue-agent/logger"
 )
 
 func IssueCommand(flags []string) error {

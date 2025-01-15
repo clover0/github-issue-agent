@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github/clover0/github-issue-agent/functions"
-	"github/clover0/github-issue-agent/logger"
-	"github/clover0/github-issue-agent/models"
-	"github/clover0/github-issue-agent/prompt"
-	"github/clover0/github-issue-agent/step"
-	"github/clover0/github-issue-agent/store"
+	"github.com/clover0/issue-agent/functions"
+	"github.com/clover0/issue-agent/logger"
+	"github.com/clover0/issue-agent/models"
+	"github.com/clover0/issue-agent/prompt"
+	"github.com/clover0/issue-agent/step"
+	"github.com/clover0/issue-agent/store"
 )
 
 type AgentLike interface {

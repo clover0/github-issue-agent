@@ -6,7 +6,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github/clover0/github-issue-agent/config/template"
+	"github.com/clover0/issue-agent/config/template"
 )
 
 type PromptTemplate struct {
